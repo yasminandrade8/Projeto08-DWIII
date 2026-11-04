@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "nome": "Garrafa de Água",
+    "codigo": "20345",
+    "categoria": "Bebida",
+    "descricao": "É definitivamente uma garrafa de água",
+    "precoUnitario": 2,
+    "quantidadeEstoque": 149,
+    "fornecedorId": 1
+  }
+]

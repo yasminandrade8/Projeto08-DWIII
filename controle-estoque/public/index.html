@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Controle de Estoque</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>📦 Sistema de Controle de Estoque</h1>
+        <p>Gerencie produtos, fornecedores, estoque baixo e integração com a BrasilAPI.</p>
+    </header>
+
+    <div class="container">
+        <nav class="tabs">
+            <button class="tab-btn active" onclick="mudarAba('produtos')">📦 Produtos & Estoque</button>
+            <button class="tab-btn" onclick="mudarAba('fornecedores')">🏢 Fornecedores</button>
+            <button class="tab-btn" onclick="mudarAba('brasilapi')">🔍 Consulta BrasilAPI</button>
+        </nav>
+
+        <div id="mensagem" class="mensagem hidden"></div>
+
+        <section id="aba-produtos" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Valor Total do Estoque</h3>
+                    <p id="valorTotalEstoque">R$ 0,00</p>
+                </div>
+                <div class="stat-card alerta-card">
+                    <h3>Produtos com Estoque Baixo (&lt; 5)</h3>
+                    <p id="totalEstoqueBaixo">0</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 id="formProdutoTitulo">Cadastrar Novo Produto</h2>
+                <form id="formProduto">
+                    <input type="hidden" id="produtoId">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="prodNome">Nome do Produto *</label>
+                            <input type="text" id="prodNome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prodCodigo">Código do Produto *</label>
+                            <input type="text" id="prodCodigo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prodCategoria">Categoria *</label>
+                            <input type="text" id="prodCategoria" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prodFornecedor">Fornecedor Responsável *</label>
+                            <select id="prodFornecedor" required>
+                                <option value="">Selecione um fornecedor...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="prodPreco">Preço Unitário (R$) *</label>
+                            <input type="number" step="0.01" id="prodPreco" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prodQtd">Quantidade em Estoque *</label>
+                            <input type="number" id="prodQtd" min="0" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="prodDescricao">Descrição</label>
+                            <textarea id="prodDescricao" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" id="btnSalvarProduto" class="btn-primary">Cadastrar Produto</button>
+                        <button type="button" id="btnCancelarProduto" class="btn-secondary hidden" onclick="cancelarEdicaoProduto()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="list-header">
+                    <h2>Acervo de Produtos</h2>
+                    <div class="filters-group">
+                        <input type="text" id="inputPesquisaProduto" placeholder="Pesquisar por nome...">
+                        <select id="selectFiltroCategoria">
+                            <option value="">Todas as Categorias</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Preço Unitário</th>
+                                <th>Qtd</th>
+                                <th>Subtotal</th>
+                                <th>Fornecedor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaProdutos">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="aba-fornecedores" class="tab-content hidden">
+            <div class="card">
+                <h2 id="formFornecedorTitulo">Cadastrar Novo Fornecedor</h2>
+                <form id="formFornecedor">
+                    <input type="hidden" id="fornId">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fornCnpj">CNPJ *</label>
+                            <input type="text" id="fornCnpj" placeholder="00.000.000/0000-00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fornRazao">Razão Social *</label>
+                            <input type="text" id="fornRazao" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fornFantasia">Nome Fantasia</label>
+                            <input type="text" id="fornFantasia">
+                        </div>
+                        <div class="form-group">
+                            <label for="fornTelefone">Telefone *</label>
+                            <input type="text" id="fornTelefone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fornEmail">E-mail *</label>
+                            <input type="email" id="fornEmail" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="fornEndereco">Endereço Completo</label>
+                            <input type="text" id="fornEndereco">
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" id="btnSalvarFornecedor" class="btn-primary">Cadastrar Fornecedor</button>
+                        <button type="button" id="btnCancelarFornecedor" class="btn-secondary hidden" onclick="cancelarEdicaoFornecedor()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Fornecedores Cadastrados</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>CNPJ</th>
+                                <th>Razão Social</th>
+                                <th>Nome Fantasia</th>
+                                <th>Telefone</th>
+                                <th>E-mail</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaFornecedores">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="aba-brasilapi" class="tab-content hidden">
+            <div class="card">
+                <h2>🔍 Consulta de Empresa por CNPJ (BrasilAPI)</h2>
+                <p class="subtitle">Informe o CNPJ para buscar dados oficiais e preencher o cadastro de fornecedor automaticamente.</p>
+                <div class="busca-api-group">
+                    <input type="text" id="inputCnpjBusca" placeholder="Digite apenas números do CNPJ...">
+                    <button type="button" class="btn-primary" onclick="consultarBrasilAPI()">Consultar CNPJ</button>
+                </div>
+                <div id="resultadoBrasilApi" class="resultado-api hidden">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

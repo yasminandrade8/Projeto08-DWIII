@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "razaoSocial": "Fornecedor Exemplo Ltda",
+    "nomeFantasia": "Exemplo Distribuidora",
+    "cnpj": "12345678000199",
+    "telefone": "11999999999",
+    "email": "contato@exemplo.com",
+    "endereco": "Rua Exemplo, 100 - São Paulo/SP"
+  }
+]
